@@ -15,13 +15,32 @@ mongo.connect(uri, function (err, db)
 {
 	  if (err) 
 	  {
-	    console.log('Unable to connect to the mongoDB server. Error:', err);
+		  console.log('Unable to connect to the mongoDB server. Error:', err);
 	  }
 	  else 
 	  {
 		  dbo = db;
 	  }
 });
+
+function getPreference(req)
+{
+	if(req.body.preference === "kanban")
+		{
+			return {name: req.body.name, email :req.body.email,password : req.body.password, 
+	    		preference : req.body.preference, "kanban":{} };
+		}
+	else if(req.body.preference === "scrum")
+		{
+			return {name: req.body.name, email :req.body.email,password : req.body.password, 
+    		preference : req.body.preference, "scrum":{} };
+		}
+	else if(req.body.preference === "waterfall")
+		{
+		return {name: req.body.name, email :req.body.email,password : req.body.password, 
+    		preference : req.body.preference, "waterfall":{} };
+		}
+}
 
 exports.findById = function(req, res) {
     var id = req.params.id;
@@ -41,13 +60,17 @@ exports.addTenant = function(req, res)
     var email = req.body.email;
     var password = req.body.password;
     var preference = req.body.preference;
-    
-    var user1 = {name: req.body.name, email :req.body.email,password : req.body.password, preference : req.body.preference };
+    //var user1 = getPreference(req);
+    var user1= {name: req.body.name, email :req.body.email,password : req.body.password, 
+		preference : req.body.preference};
     dbo.collection('multitenant', function(err, collection) {
-        collection.insert(user1, {safe:true}, function(err, result) {
-            if (err) {
+        collection.insert(user1, {safe:true}, function(err, result) 
+        {
+            if (err) 
+            {
                 res.send({'error':'An error has occurred'});
-            } else 
+            }
+            else 
             {
                 console.log(user1);
                 res.jsonp(user1);

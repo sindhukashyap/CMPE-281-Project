@@ -48,7 +48,7 @@ function getCard(/*callback*/req,res)
 function getCardsByQueue(/*callback*/req,res)
 {
 	var cardId=req.params.text1;
-	
+	//Need to use aggregate function
 	dbo.collection('multitenant', function(err, collection) 
 		    {
 		    	
@@ -100,7 +100,8 @@ function getStatus(/*callback*/req,res)
 }
 
 function updateCard(/*callback*/req,res)
-{/*
+{
+	/*
 	var card_id = req.params.card_id; 
 	
     var firstName = req.params.firstName;
@@ -117,13 +118,15 @@ function updateCard(/*callback*/req,res)
     var card_name = req.param('card_name');
     var queueName =req.param('queueName');
     console.log('Queue_name'+queueName);
+    
     //db.multitenant.update({"kanban.cards.card_id" : "Card_101_1"}, {"$set" : {"kanban.cards.$.queue_name" : "Planned"}})   
     //var user1 = getPreference(req);
-
+    //Updated Query: db.multitenant.update({"kanban.cards.card_id" : "Card_101_1"}, {"$set" : {"kanban.cards.$.queue_name" : "Planned","kanban.cards.$.card_name" : "NewCardName2","kanban.cards.$.user.firstname" : "Purvi","kanban.cards.$.user.lastname" : "Purvi"}})  
     
     dbo.collection('multitenant', function(err, collection) {
-        collection.update({"kanban.cards.card_id" : "Card_101_1"}, {"$set" : {"kanban.cards.$.queue_name" : queueName}}, function(err, result) 
-        {
+        //collection.update({"kanban.cards.card_id" : "Card_101_1"}, {"$set" : {"kanban.cards.$.queue_name" : queueName}}, function(err, result) 
+       collection.update({"kanban.cards.card_id" : card_id}, {"$set" : {"kanban.cards.$.queue_name" : queueName,"kanban.cards.$.card_name" : card_name,"kanban.cards.$.user.firstname" : firstName,"kanban.cards.$.user.lastname" : lastName}}, function(err, result)  
+        		{
             if (err) 
             {
                 res.send({'error':'An error has occurred'});

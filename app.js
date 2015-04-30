@@ -36,13 +36,13 @@ app.get('/', function(req, res){
 	 res.render('dhanu');
 }
 );
-app.get('/getCard', kanban.getCard);
+app.get('/getCard', kanban.getCard); //Working
 app.get('/getCardsByQueue', kanban.getCardsByQueue);
 app.get('/getStatus',kanban.getStatus);
 
-app.post('/updateCard',kanban.updateCard);
+app.post('/updateCard',kanban.updateCard); // Working
 
-app.post('/createCard',kanban.createCard);
+app.post('/createCard',kanban.createCard); // Working : also need tenantId in api
 /************/
 
 

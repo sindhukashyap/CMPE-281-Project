@@ -17,15 +17,17 @@ mongo.connect(uri, function (err, db)
 
 function getCard(/*callback*/req,res)
 {
-	var cardId=req.params.text1;
+	//var cardId=req.params.cardId;
+	var cardId=req.param('cardId');
+	console.log(cardId+"cardId");
+	//Query: db.multitenant.find({'kanban.cards.card_id':'Card_101_1'},{'kanban.cards.$.card_id':1});
 	
-	dbo.collection('multitenant', function(err, collection) 
-		    {
-		    	//var story = {'story_id':req.params.id_story};
-		//db.multitenant.find({'kanban.cards.card_id' : 'Card_101_1'});
-
-		       collection.findOne({'kanban.cards.card_id' : 'Card_101_1'}, function(err, result)
+	dbo.collection('multitenant', function(err, collection) {
+		    
+		    	
+		       //collection.findOne({'kanban.cards.card_id' : 'Card_101_1'}, function(err, result)
 		      //collection.find( function(err, result)
+			collection.findOne({'kanban.cards.card_id':cardId},{'kanban.cards.$.card_id':1},function(err, result)
 		    	{
 		            if (err) 
 		            {
@@ -49,11 +51,9 @@ function getCardsByQueue(/*callback*/req,res)
 	
 	dbo.collection('multitenant', function(err, collection) 
 		    {
-		    	//var story = {'story_id':req.params.id_story};
-		//db.multitenant.find({'kanban.cards.card_id' : 'Card_101_1'});
+		    	
 
 		       collection.findOne({'kanban.cards.card_id' : 'Card_101_1'}, function(err, result)
-		      //collection.find( function(err, result)
 		    	{
 		            if (err) 
 		            {

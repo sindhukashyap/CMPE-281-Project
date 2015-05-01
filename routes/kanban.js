@@ -47,13 +47,63 @@ function getCard(/*callback*/req,res)
 
 function getCardsByQueue(/*callback*/req,res)
 {
-	var cardId=req.params.text1;
-	//Need to use aggregate function
+	var queue=req.param('queueName');
+	console.log(queue+ " queue")
+	//Need to use aggregate functio
+/**Query
+ * db.multitenant.aggregate([{
+  $match: {
+    _id: '101'
+  }
+}, {
+  $unwind: "$kanban.cards"
+}, {
+  $project: {
+    card_name: "$kanban.cards.card_name",
+    card_id: "$kanban.cards.card_id",
+    queue_name: "$kanban.cards.queue_name",
+    user: {
+      firstname: "$kanban.cards.user.firstname",
+      lastname: "$kanban.cards.user.lastname"
+    }
+  }
+}, {
+  $match: {
+    queue_name: {
+      $in: ["Planned"]
+    }
+  }
+}])
+ */
+	 
 	dbo.collection('multitenant', function(err, collection) 
 		    {
 		    	
 
-		       collection.findOne({'kanban.cards.card_id' : 'Card_101_1'}, function(err, result)
+		       collection.aggregate([{
+		    	   $match: {
+		    		    _id: '101'
+		    		  }
+		    		}, {
+		    		  $unwind: "$kanban.cards"
+		    		}, {
+		    		  $project: {
+		    		    card_name: "$kanban.cards.card_name",
+		    		    card_id: "$kanban.cards.card_id",
+		    		    queue_name: "$kanban.cards.queue_name",
+		    		    user: {
+		    		      firstname: "$kanban.cards.user.firstname",
+		    		      lastname: "$kanban.cards.user.lastname"
+		    		    }
+		    		  }
+		    		}, {
+		    		  $match: {
+		    		    queue_name: {
+		    		      $in: [queue]
+		    		    }
+		    		  }
+		    		}],
+		    		   function(err, result)
 		    	{
 		            if (err) 
 		            {
@@ -172,7 +222,7 @@ function createCard(/*callback*/req,res)
     	
     	
         collection.update({
-			  "_id": "101"
+			  "_id": "101"   
 		}, 
 		{
 		  $push:{

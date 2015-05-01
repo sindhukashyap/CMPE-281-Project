@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Get Status</h1>
+    <form action="/getStatus" method="get">
+    <input type="text" name="text1">
+    <input type="submit">
+    </form> 
+    
+    <h1>Get Card</h1>
+    <form action="/getCard" method="get">
+    cardId : <input type="text" name="cardId">
+    <input type="submit">
+    </form> 
+  
+  <br/>
+   <h1>get Cards By Queue</h1>
+   <form action="/getCardsByQueue" method="get">
+    Queue Name: <input type="text" name="queueName"><br/>
+    <input type="submit">
+    </form>      
+
+    <br/>
+   <h1>Update Card</h1>
+   <form action="/updateCard" method="post">
+ card_id:   <input type="text" name="card_id"><br/>
+ firstName: <input type="text" name="firstName"><br/>
+ lastName: <input type="text" name="lastName"><br/>
+ card_name: <input type="text" name="card_name"><br/>
+ queue_name: <input type="text" name="queueName"><br/>
+ 
+    <input type="submit">
+    </form>     
+    
+ <br/>
+   <h1>Create card</h1>
+   <form action="/createCard" method="post">
+    firstName: <input type="text" name="firstName"><br/>
+ lastName: <input type="text" name="lastName"><br/>
+ card_name: <input type="text" name="card_name"><br/>
+ queue_name: <input type="text" name="queueName"><br/>
+ 
+    <input type="submit">
+    </form>     
+  </body>
+</html>

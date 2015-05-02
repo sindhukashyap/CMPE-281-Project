@@ -173,9 +173,13 @@ function updateCard(/*callback*/req,res)
     //var user1 = getPreference(req);
     //Updated Query: db.multitenant.update({"kanban.cards.card_id" : "Card_101_1"}, {"$set" : {"kanban.cards.$.queue_name" : "Planned","kanban.cards.$.card_name" : "NewCardName2","kanban.cards.$.user.firstname" : "Purvi","kanban.cards.$.user.lastname" : "Purvi"}})  
     
-    dbo.collection('multitenant', function(err, collection) {
+    dbo.collection('multitenant', function(err, collection) 
+    {
         //collection.update({"kanban.cards.card_id" : "Card_101_1"}, {"$set" : {"kanban.cards.$.queue_name" : queueName}}, function(err, result) 
-       collection.update({"kanban.cards.card_id" : card_id}, {"$set" : {"kanban.cards.$.queue_name" : queueName,"kanban.cards.$.card_name" : card_name,"kanban.cards.$.user.firstname" : firstName,"kanban.cards.$.user.lastname" : lastName}}, function(err, result)  
+       collection.update({"kanban.cards.card_id" : card_id}, 
+    		   {"$set" : {"kanban.cards.$.queue_name" : queueName,"kanban.cards.$.card_name" : card_name,
+    			   "kanban.cards.$.user.firstname" : firstName,"kanban.cards.$.user.lastname" : lastName}},
+    			   function(err, result)  
         		{
             if (err) 
             {
@@ -199,10 +203,7 @@ function createCard(/*callback*/req,res)
     var card_name = req.param('card_name');
     var queueName =req.param('queueName');
     
-   
-
-    
-    dbo.collection('multitenant', function(err, collection) {
+dbo.collection('multitenant', function(err, collection) {
     	var card = {
     			  "user": {
     			    "firstname": firstName,

@@ -28,7 +28,7 @@ function getPreference(req)
 	if(req.body.preference === "kanban")
 		{
 			return {name: req.body.name, email :req.body.email,password : req.body.password, 
-	    		preference : req.body.preference, "kanban":{} };
+	    		preference : req.body.preference, "kanban":{"cards":[] }};
 		}
 	else if(req.body.preference === "scrum")
 		{
@@ -38,15 +38,15 @@ function getPreference(req)
 	else if(req.body.preference === "waterfall")
 		{
 		return {name: req.body.name, email :req.body.email,password : req.body.password, 
-    		preference : req.body.preference, "waterfall":{} };
+    		preference : req.body.preference, "waterfall":{"tasks":[]}};
 		}
 }
 
-exports.findById = function(req, res) {
-    var id = req.params.id;
-    console.log('Retrieving tenant: ' + id);
+exports.findByEmail = function(req, res) {
+    var email = req.params.email;
+    console.log('Retrieving tenant: ' + email);
     dbo.collection('multitenant', function(err, collection) {
-        collection.findOne({'_id':id}, function(err, item) {
+        collection.findOne({'email':email}, function(err, item) {
         	console.log(item);
         	res.jsonp(item);
         });
@@ -56,13 +56,11 @@ exports.findById = function(req, res) {
 exports.addTenant = function(req, res) 
 {
 	//res.setHeader('Content-Type', 'application/json');
-    var name = req.body.name;
-    var email = req.body.email;
-    var password = req.body.password;
-    var preference = req.body.preference;
-    //var user1 = getPreference(req);
-    var user1= {name: req.body.name, email :req.body.email,password : req.body.password, 
-		preference : req.body.preference};
+    
+    var user1 = getPreference(req);
+    
+//    var user1= {name: req.body.name, email :req.body.email,password : req.body.password, 
+//		preference : req.body.preference};
     dbo.collection('multitenant', function(err, collection) {
         collection.insert(user1, {safe:true}, function(err, result) 
         {

@@ -130,6 +130,7 @@ exports.updateStory = function(req, res) {
 			,start_date : new Date(req.body.startDate)
 			,description : req.body.description
 			,estimated_hours : req.body.estimatedHrs
+			,remaining_hours : req.body.remainingHrs
 			,resource_name : req.body.resourceName    					
 		};
     

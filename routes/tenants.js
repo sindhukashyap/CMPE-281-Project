@@ -53,6 +53,13 @@ exports.findByEmail = function(req, res) {
     });
 };
 
+
+exports.register = function(req, res) {
+	
+	res.render('Register');
+
+}
+
 exports.addTenant = function(req, res) 
 {
 	//res.setHeader('Content-Type', 'application/json');
@@ -71,9 +78,66 @@ exports.addTenant = function(req, res)
             else 
             {
                 console.log(user1);
-                res.jsonp(user1);
+                res.render('Login');
             }
         });
     });
 }; 
+
+
+function getUserPreference(res,result,email)
+{
+	if(result=== "kanban")
+		{
+			res.render('Kanban',{email:email});
+		}
+	else if(result === "scrum")
+		{
+			res.render('scrum',{email:email});
+		}
+	else if(result === "waterfall")
+		{
+			res.render('waterfall',{email:email});
+		}
+}
  
+exports.loginUser = function(req, res) 
+{
+	//res.setHeader('Content-Type', 'application/json');
+    var email = req.body.email;
+    var password = req.body.password;
+   /* dbo.collection('multitenant', function(err, collection) {
+        collection.insert(user1, {safe:true}, function(err, result) 
+        {
+            if (err) 
+            {
+                res.send({'error':'An error has occurred'});
+            }
+            else 
+            {
+                console.log(user1);
+                getPreference(req,res);
+            }
+        });
+    });*/
+    dbo.collection('multitenant',function(err,collection){
+    	collection.findOne({'email':email},{'preference':1},function(err, result){
+    		if(err){
+    			console.log("eroor");
+    			res.send({'error':'An error has occurred'});
+    		}
+    		else {
+    			console.log('' +result + "Running");
+    			//console.log(result.preference);
+    			if(result===null)
+    				res.render('Login');
+    			else 
+    				getUserPreference(res,result.preference,req.body.email);
+    		}
+    		
+    	
+    	
+    });
+    });
+    
+}; 

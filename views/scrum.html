@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>AdminLTE 2 | Dashboard</title>
+    <title>Multitenancy Application</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -20,7 +20,7 @@
     <link href="/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <!-- AdminLTE Skins. Choose a skin from the css/skins 
          folder instead of downloading all of them to reduce the load. -->
-    <link href="/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/skins/skin-black.min.css" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,7 +29,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="skin-blue">
+  <body class="skin-black">
     <div class="wrapper">
       
       <header class="main-header">
@@ -48,7 +48,7 @@
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
+                  <img src="/img/stories.jpg" class="user-image" alt="User Image"/>
                   <span class="hidden-xs"><%=email%></span>
                   <input type="hidden" value  = "<%=email%>" id= "input_email">
                   <input type="hidden" id= "user_id">
@@ -56,10 +56,9 @@
                 <ul class="dropdown-menu">
                   <!-- User image -->
                   <li class="user-header">
-                    <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
-                    <p>
-                      Aastha Bhartia
-                      <small>Member since Nov. 2012</small>
+                    <img src="/img/stories.jpg" class="img-circle" alt="User Image" />
+                    <p >
+                     
                      
                     </p>
                   </li>
@@ -76,10 +75,10 @@
           <!-- Sidebar user panel -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
+              <img src="/img/stories.jpg" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
-              <p>Sindhu Kashyap</p>
+              <p id="user_name"></p>
 
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -390,6 +389,7 @@
                 	else
                 	{
                 		$("#user_id").val(userdata._id);
+                		$("#user_name").val(userdata.name);
                 		$("#display_start").text(userdata.scrum.sprints.start_date);
                 		$("#display_end").text(userdata.scrum.sprints.end_date);
                     	var stories = userdata.scrum.sprints.stories;
@@ -422,17 +422,17 @@
                 dataType: "json",
                 success: function(status) {
                 	
-                	var noOfHrs = 50;
-                	var hrsRemaining = 40;
+                	var noOfHrs = status.totalHours;
+                	var hrsRemaining = status.remaining_hrs;
                 	var expected = []; 
                 	var expectedDay = []; 
                 	var actual = [];
-                	//var noOfDays =  Math.floor(( Date.parse(status.end_date) - Date.parse(status.start_date) ) / 86400000);
-                	var noOfDays = 5;
-                	//var noOfDaysRemaining =  Math.floor(( Date.parse(status.end_date) - Date.parse(status.cur_date) ) / 86400000);
-           			var noOfDaysRemaining = 2;
+                	var noOfDays =  Math.floor(( Date.parse(status.end_date) - Date.parse(status.start_date) ) / 86400000);
+                	//var noOfDays = 5;
+                	var noOfDaysRemaining =  Math.floor(( Date.parse(status.end_date) - Date.parse(status.cur_date) ) / 86400000);
+           			//var noOfDaysRemaining = 2;
                 	var hrsPerDayIdeal = noOfHrs/noOfDays;
-                	var hrsPerDayActual = hrsRemaining/noOfDays-noOfDaysRemaining;
+                	var hrsPerDayActual = (noOfHrs-hrsRemaining)/(noOfDays-noOfDaysRemaining);
                 	expected[0] = noOfHrs - hrsPerDayIdeal;
                 	actual[0] = noOfHrs - hrsPerDayActual;
                 	expectedDay.push("Day " + 0);
@@ -486,7 +486,7 @@
         	            }]
         	        },
         	        tooltip: {
-        	            valueSuffix: '°C'
+        	            valueSuffix: 'Hrs'
         	        },
         	        legend: {
         	            layout: 'vertical',
@@ -531,6 +531,7 @@
                 
                 success: function(userdata) {
                 	$("#user_id").val(userdata._id);
+                	$("#user_name").val(userdata.name);
                 	$("#display_start").text(userdata.scrum.sprints.start_date);
             		$("#display_end").text(userdata.scrum.sprints.end_date);
                 	var stories = userdata.scrum.sprints.stories;

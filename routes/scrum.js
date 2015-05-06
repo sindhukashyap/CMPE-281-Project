@@ -156,8 +156,8 @@ exports.checkDates = function(req, res)
 };
 exports.getStatusScrum = function(req, res) 
 {
-	//var id = new ObjectID(req.query.id);
-	var id = new ObjectID(req.params.id);
+	var id = new ObjectID(req.query.id);
+	//var id = new ObjectID(req.params.id);
 	//db.multitenant.find({_id: ObjectId("5543f652a23963f82b74a321"),"scrum.sprints.sprint_id" :1},{"scrum.sprints.stories":1,_id:0})
 	var JSONObj = {};
 	var remHrssum = 0;

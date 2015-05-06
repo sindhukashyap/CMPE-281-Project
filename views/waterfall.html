@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>AdminLTE 2 | Dashboard</title>
+    <title>Multitenancy Application</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.2 -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -20,7 +20,7 @@
     <link href="/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
     <!-- AdminLTE Skins. Choose a skin from the css/skins 
          folder instead of downloading all of them to reduce the load. -->
-    <link href="/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/skins/skin-black.min.css" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -29,7 +29,7 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
   </head>
-  <body class="skin-blue">
+  <body class="skin-black">
     <div class="wrapper">
       
       <header class="main-header">
@@ -48,13 +48,13 @@
               <!-- User Account: style can be found in dropdown.less -->
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <img src="/img/user2-160x160.jpg" class="user-image" alt="User Image"/>
+                  <img src="/img/waterfall.jpg" class="user-image" alt="User Image"/>
                   <span class="hidden-xs"><%=email%></span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- User image -->
                   <li class="user-header">
-                    <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
+                    <img src="/img/waterfall.jpg" class="img-circle" alt="User Image" />
                     <p>
                       <%=email%>
                       <small>Member since Nov. 2012</small>
@@ -75,10 +75,10 @@
           <!-- Sidebar user panel -->
           <div class="user-panel">
             <div class="pull-left image">
-              <img src="/img/user2-160x160.jpg" class="img-circle" alt="User Image" />
+              <img src="/img/waterfall.jpg" class="img-circle" alt="User Image" />
             </div>
             <div class="pull-left info">
-             <p>Alexander Pierce</p>
+             <p id="username"></p>
 
               <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
@@ -91,7 +91,7 @@
              
               <ul class="treeview-menu">
                 <li class="active" ><a href="" data-toggle="modal" data-target="#myModal"><i class="fa fa-book"></i>Add Task</a></li>
-                <li class="active" ><a href="" data-toggle="modal" data-target="#graphModal"><i class="fa fa-book"></i>View Graph</a></li>
+                <li class="active" ><a href="" onclick="generateGraph()" data-toggle="modal" data-target="#graphModal"><i class="fa fa-book"></i>View Graph</a></li>
               </ul>
             </li>
             
@@ -201,9 +201,9 @@
                               <h4 class="modal-title" id="myModalLabel">Graph</h4>
                           </div>
                           <div class="modal-body">
-                          <div class="box-body">
+                          <div class="box-body" id="graphcontainer">
                                           
-                          Display Graph                    
+                                           
                           </div>                                      
                            </div>
                           <div class="modal-footer">
@@ -313,7 +313,9 @@
     <script src="/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
     <!-- ChartJS 1.0.1 -->
     <script src="/plugins/chartjs/Chart.min.js" type="text/javascript"></script>
-
+	 <script src="/plugins/chartjs/Chart.min.js" type="text/javascript"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="js/pages/dashboard2.js" type="text/javascript"></script>
 
@@ -338,7 +340,7 @@
                 success: function(userdata) {
                 	
                 	
-                	
+                	$("#username").val(userdata.name);
                 	$("#user_id").val(userdata._id);
                 	var tasks = userdata.waterfall.tasks;
                 	for (var idx in tasks) {
@@ -357,29 +359,107 @@
             });
           
         }
+    	
+    	function generateGraph()
+        {
+        	$.ajax({
+                url: "./getStatusWaterfall?userId="+document.getElementById("user_id").value,
+                contentType: "application/json",
+                
+                type: "GET",
+                dataType: "json",
+                success: function(status) {
+                	
+                	var tasks = [],tasksPercent = [];
+                	for(i=1;i<=status.count;i++)
+                		{
+                			tasks.push("Task "+i);
+                			
+                			tasksPercent.push(status['Task'+i]);
+                		
+                		}
+                	drawGraph(tasks,tasksPercent);
+          
+                },
+                error: function(errorThrown) {
+                	
+                	
+                	//displaycard("201",document.getElementById("firstname").value,document.getElementById("lastname").value,document.getElementById("cardname").value);
+                	
+                 }
+
+            });
+        	
+
+        }
+        
+        function drawGraph(tasks,tasksPercent)
+        {
+        	$('#graphModal').modal('show'); 
+        	$('#graphcontainer').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Remaining Time (In Percent)'
+                },
+                xAxis: {
+                    categories: tasks,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Percent Remaining'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} %</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Remaining Hrs in Percent',
+                    data: tasksPercent
+
+                }]
+            });
+        }
+    	
+    	
+    	
+    	
         function createNewTask()
         {
             
-        	var id =  "102";
+        	
         	var json = {taskdesc : document.getElementById("taskdesc").value , startdate:document.getElementById("startdate").value , duration: document.getElementById("duration").value, hours: document.getElementById("hours").value, resource: document.getElementById("resource").value, riskname: document.getElementById("riskname").value, userId : $("#user_id").val() };
-        	alert( document.getElementById("taskdesc").value );
+        	
             $.ajax({
                 url: "./createTask",
                 contentType: "application/json",
                 data: JSON.stringify(json),
                 type: "POST",
                 dataType: "json",
-                success: function(taskid) {
+                success: function(results) {
                 	
-                	alert("Success");
-                	alert(taskid);
+                	
                 	//edit task id
-                	displaytask("202",document.getElementById("taskdesc").value,document.getElementById("startdate").value,document.getElementById("duration").value,document.getElementById("hours").value,document.getElementById("resource").value,document.getElementById("riskname").value);
+                	displaytask(results.TaskId,document.getElementById("taskdesc").value,document.getElementById("startdate").value,document.getElementById("duration").value,document.getElementById("hours").value,document.getElementById("resource").value,document.getElementById("riskname").value);
                 	
           
                 },
                 error: function(errorThrown) {
-                	alert("error");
+                	
                   //displaytask("202",document.getElementById("taskdesc").value,document.getElementById("startdate").value,document.getElementById("duration").value,document.getElementById("hours").value,document.getElementById("resource").value,document.getElementById("riskname").value);
                 	
                  }
@@ -399,11 +479,11 @@
         	$('#myModalUpdate').modal('show'); 
         	 $('#taskid_up').val(param.parentNode.childNodes[0].innerText);
         	 $('#taskdesc_up').val(param.parentNode.childNodes[2].innerText);
-        	 $('#startdate_up').val(param.parentNode.childNodes[5].innerText);
-        	 $('#duration_up').val(param.parentNode.childNodes[7].innerText);
-        	 $('#hours_up').val(param.parentNode.childNodes[9].innerText);
-        	 $('#resource_up').val(param.parentNode.childNodes[11].innerText);
-        	 $('#riskname_up').val(param.parentNode.childNodes[13].innerText);
+        	 $('#startdate_up').val(param.parentNode.childNodes[4].innerText);
+        	 $('#duration_up').val(param.parentNode.childNodes[6].innerText);
+        	 $('#hours_up').val(param.parentNode.childNodes[8].innerText);
+        	 $('#resource_up').val(param.parentNode.childNodes[10].innerText);
+        	 $('#riskname_up').val(param.parentNode.childNodes[12].innerText);
         }
         
         function updateTaskAjax()
@@ -411,7 +491,7 @@
         	//Make Ajax call to update task
         	var id =  "102";
         	var json = {taskid : document.getElementById("taskid_up").value,taskdesc : document.getElementById("taskdesc_up").value ,startdate:document.getElementById("startdate_up").value, duration:document.getElementById("duration_up").value ,hours: document.getElementById("hours_up").value , resource: document.getElementById("resource_up").value, riskname:document.getElementById("riskname_up").value  , userId : $("#user_id").val()};
-            alert(document.getElementById("riskname_up").value);
+            
         	$.ajax({
                 url: "./updateTask",
                 contentType: "application/json",
@@ -419,13 +499,13 @@
                 type: "POST",
                 dataType: "json",
                 success: function(taskid) {
-                	alert(document.getElementById("riskname_up").value);
+                	
                 	$(currentlyupdating.parentNode.childNodes[2]).text($('#taskdesc_up').val());
                 	$(currentlyupdating.parentNode.childNodes[4]).text($('#startdate_up').val());
                 	$(currentlyupdating.parentNode.childNodes[6]).text($('#duration_up').val());
                 	$(currentlyupdating.parentNode.childNodes[8]).text($('#hours_up').val());
                 	$(currentlyupdating.parentNode.childNodes[10]).text($('#resource_up').val());
-                	$(currentlyupdating.parentNode.childNodes[11]).text($('#riskname_up').val());
+                	$(currentlyupdating.parentNode.childNodes[12]).text($('#riskname_up').val());
           
                 },
                 error: function(errorThrown) {

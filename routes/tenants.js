@@ -1,8 +1,3 @@
-//var MongoClient = require('mongodb').MongoClient,
-//    Server = require('mongodb').Server,
-//    db;
-//var mongoClient  = new MongoClient(new Server('mongodb://Sparkling5:mongolab4@ds033097', 33097));
-//	//new MongoClient(new Server('mongodb://Sparkling5:mongolab4@ds033097', 33097, {auto_reconnect: true}));
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -27,17 +22,17 @@ function getPreference(req)
 {
 	if(req.body.preference === "kanban")
 		{
-			return {name: req.body.name, email :req.body.email,password : req.body.password, 
+			return {name: req.body.username, email :req.body.email,password : req.body.password, 
 	    		preference : req.body.preference, "kanban":{"cards":[] }};
 		}
 	else if(req.body.preference === "scrum")
 		{
-			return {name: req.body.name, email :req.body.email,password : req.body.password, 
+			return {name: req.body.username, email :req.body.email,password : req.body.password, 
     		preference : req.body.preference, "scrum":{} };
 		}
 	else if(req.body.preference === "waterfall")
 		{
-		return {name: req.body.name, email :req.body.email,password : req.body.password, 
+		return {name: req.body.username, email :req.body.email,password : req.body.password, 
     		preference : req.body.preference, "waterfall":{"tasks":[]}};
 		}
 }
@@ -57,6 +52,12 @@ exports.findByEmail = function(req, res) {
 exports.register = function(req, res) {
 	
 	res.render('Register');
+
+}
+
+exports.login = function(req, res) {
+	
+	res.render('Login');
 
 }
 
@@ -103,23 +104,8 @@ function getUserPreference(res,result,email)
  
 exports.loginUser = function(req, res) 
 {
-	//res.setHeader('Content-Type', 'application/json');
     var email = req.body.email;
     var password = req.body.password;
-   /* dbo.collection('multitenant', function(err, collection) {
-        collection.insert(user1, {safe:true}, function(err, result) 
-        {
-            if (err) 
-            {
-                res.send({'error':'An error has occurred'});
-            }
-            else 
-            {
-                console.log(user1);
-                getPreference(req,res);
-            }
-        });
-    });*/
     dbo.collection('multitenant',function(err,collection){
     	collection.findOne({'email':email},{'preference':1},function(err, result){
     		if(err){
@@ -133,11 +119,7 @@ exports.loginUser = function(req, res)
     				res.render('Login');
     			else 
     				getUserPreference(res,result.preference,req.body.email);
-    		}
-    		
-    	
-    	
+    		} 	
     });
     });
-    
 }; 

@@ -15,13 +15,13 @@ mongo.connect(uri, function (err, db)
 });
 function createTask(req,res){
 	var task_id = new ObjectID();
-    var task_desc  = req.param('taskdesc');
-    var start_date = req.param('startdate');
-    var duration = req.param('duration');
-    var hoursCompleted=0;
-    var resource_name= req.param('resource');
-    var risk_name= req.param('riskname');
-    var id= req.body.userId;
+    var task_desc  = req.body.taskdesc;
+    var start_date = req.body.startdate;
+    var duration = req.body.duration;
+    var hoursCompleted= req.body.hours;
+    var resource_name= req.body.resource;
+    var risk_name= req.body.riskname;
+    var id= new ObjectID(req.body.userId);
     console.log(task_desc);
     console.log(duration);
     dbo.collection('multitenant', function(err, collection) {
@@ -38,7 +38,7 @@ function createTask(req,res){
                   "risk_name": risk_name,
    };
  collection.update({
-			  "_id": "102"}, {$push:{ "waterfall.tasks": doc}}, function(err, result) {
+			  "_id": id}, {$push:{ "waterfall.tasks": doc}}, function(err, result) {
             if (err) 
             	res.send({'error':'An error has occurred'});
             else 
@@ -63,7 +63,7 @@ function updateTask(req,res){
     console.log(start_date);
     console.log(duration);
     
-    var id= req.body.userId;
+    var id= new ObjectID(req.body.userId);
     dbo.collection('multitenant', function(err, collection) {
         collection.update({"waterfall.tasks.task_id" : taskid}, {"$set" : {"waterfall.tasks.$.task_desc": task_desc,"waterfall.tasks.$.start_date" : start_date,"waterfall.tasks.$.duration" : duration,"waterfall.tasks.$.hoursCompleted": hoursCompleted,"waterfall.tasks.$.resource.resource_name" : resource_name,"waterfall.tasks.$.risk_name": risk_name}}, function(err, result)  
         		{
@@ -108,13 +108,13 @@ function getTask(req,res){
     
     
 function getStatus(req,res){
-	var id= req.param('userId');
+	var id= new ObjectID(req.query.userId);
 	
 	dbo.collection('multitenant', function(err,collection){
 		collection.aggregate(
 				  [{
 					    $match: {
-					      _id: '102'
+					      _id: id
 					    }
 					  }, {
 					    $unwind: "$waterfall.tasks"
@@ -136,8 +136,15 @@ function getStatus(req,res){
             else 
             {
                 console.log('' + result + ' Doc Fetched!');
-                var count=result[0].count;
-                var str='{"count":'+count+',';
+                var count=0,str; 
+                if(result.length>0)
+                	{
+                	var count=result[0].count;
+                	str='{"count":'+count+',';
+                	}
+                else
+                	str='{"count":'+count;
+                	
                 
                 
             		collection.findOne({"_id":id},function(err, result)
@@ -162,7 +169,7 @@ function getStatus(req,res){
                         	   if(percent!==null && !isNaN(percent)  )
                         		   {
                         		   console.log("Inside");
-                        	   if(i===count-2) //make it 1 later
+                        	   if(i===count-1) //make it 1 later
                         		   {
                         	   str+='"Task'+(i+1)+'":'+percent; 
                         		   }
@@ -171,11 +178,7 @@ function getStatus(req,res){
                                str+='"Task'+(i+1)+'":'+percent+",";
                         		   }
                         		   }
-
-                        	
-                           } 
-                           
-                           
+                           }  
                            str+="}";
                            console.log(str);
                             res.send(JSON.parse(str));
@@ -188,19 +191,7 @@ function getStatus(req,res){
             }
 	});
 	});
-	
-
 }
-
-
-
-
-
-
-
-
-
-
 
 exports.createTask=createTask;
 exports.updateTask=updateTask;

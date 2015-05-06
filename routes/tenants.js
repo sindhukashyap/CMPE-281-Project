@@ -28,7 +28,7 @@ function getPreference(req)
 	if(req.body.preference === "kanban")
 		{
 			return {name: req.body.name, email :req.body.email,password : req.body.password, 
-	    		preference : req.body.preference, "kanban":{} };
+	    		preference : req.body.preference, "kanban":{"cards":[] }};
 		}
 	else if(req.body.preference === "scrum")
 		{
@@ -38,31 +38,36 @@ function getPreference(req)
 	else if(req.body.preference === "waterfall")
 		{
 		return {name: req.body.name, email :req.body.email,password : req.body.password, 
-    		preference : req.body.preference, "waterfall":{} };
+    		preference : req.body.preference, "waterfall":{"tasks":[]}};
 		}
 }
 
-exports.findById = function(req, res) {
-    var id = req.params.id;
-    console.log('Retrieving tenant: ' + id);
+exports.findByEmail = function(req, res) {
+    var email = req.params.email;
+    console.log('Retrieving tenant: ' + email);
     dbo.collection('multitenant', function(err, collection) {
-        collection.findOne({'_id':id}, function(err, item) {
+        collection.findOne({'email':email}, function(err, item) {
         	console.log(item);
         	res.jsonp(item);
         });
     });
 };
 
+
+exports.register = function(req, res) {
+	
+	res.render('Register');
+
+}
+
 exports.addTenant = function(req, res) 
 {
 	//res.setHeader('Content-Type', 'application/json');
-    var name = req.body.name;
-    var email = req.body.email;
-    var password = req.body.password;
-    var preference = req.body.preference;
-    //var user1 = getPreference(req);
-    var user1= {name: req.body.name, email :req.body.email,password : req.body.password, 
-		preference : req.body.preference};
+    
+    var user1 = getPreference(req);
+    
+//    var user1= {name: req.body.name, email :req.body.email,password : req.body.password, 
+//		preference : req.body.preference};
     dbo.collection('multitenant', function(err, collection) {
         collection.insert(user1, {safe:true}, function(err, result) 
         {
@@ -73,9 +78,66 @@ exports.addTenant = function(req, res)
             else 
             {
                 console.log(user1);
-                res.jsonp(user1);
+                res.render('Login');
             }
         });
     });
 }; 
+
+
+function getUserPreference(res,result,email)
+{
+	if(result=== "kanban")
+		{
+			res.render('Kanban',{email:email});
+		}
+	else if(result === "scrum")
+		{
+			res.render('scrum',{email:email});
+		}
+	else if(result === "waterfall")
+		{
+			res.render('waterfall',{email:email});
+		}
+}
  
+exports.loginUser = function(req, res) 
+{
+	//res.setHeader('Content-Type', 'application/json');
+    var email = req.body.email;
+    var password = req.body.password;
+   /* dbo.collection('multitenant', function(err, collection) {
+        collection.insert(user1, {safe:true}, function(err, result) 
+        {
+            if (err) 
+            {
+                res.send({'error':'An error has occurred'});
+            }
+            else 
+            {
+                console.log(user1);
+                getPreference(req,res);
+            }
+        });
+    });*/
+    dbo.collection('multitenant',function(err,collection){
+    	collection.findOne({'email':email},{'preference':1},function(err, result){
+    		if(err){
+    			console.log("eroor");
+    			res.send({'error':'An error has occurred'});
+    		}
+    		else {
+    			console.log('' +result + "Running");
+    			//console.log(result.preference);
+    			if(result===null)
+    				res.render('Login');
+    			else 
+    				getUserPreference(res,result.preference,req.body.email);
+    		}
+    		
+    	
+    	
+    });
+    });
+    
+}; 

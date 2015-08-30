@@ -1,0 +1,7 @@
+lib-cov
+.settings/*
+.jshintrc
+.project/*
+
+npm-debug.log
+node_modules

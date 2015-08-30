@@ -1,0 +1,14 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+.settings/
+.jshintrc
+.project
+
+npm-debug.log
+node_modules

@@ -1,0 +1,21 @@
+{
+  "name": "Basic",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cookie-parser": "~1.0.1",
+    "debug": "~0.7.4",
+    "ejs": "*",
+    "express": "~4.0.0",
+    "mongodb": "*",
+    "mongoose": "~3.8.8",
+    "monk": "*",
+    "morgan": "~1.0.0",
+    "serve-favicon": "~2.1.3",
+    "connect" : "*"
+  }
+}

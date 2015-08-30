@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Multitenancy Application</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Bootstrap 3.3.2 -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Font Awesome Icons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Ionicons -->
+    <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+    <!-- Morris chart -->
+    <link href="plugins/morris/morris.css" rel="stylesheet" type="text/css" />
+    <!-- jvectormap -->
+    <link href="plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
+    <!-- Daterange picker -->
+    <link href="plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
+    <!-- Theme style -->
+    <link href="/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins 
+         folder instead of downloading all of them to reduce the load. -->
+    <link href="/css/skins/skin-black.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body class="skin-black">
+    <div class="wrapper">
+      
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="index2.html" class="logo">Project Planning</a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <!-- Navbar Right Menu -->
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+
+              <!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img src="/img/stories.jpg" class="user-image" alt="User Image"/>
+                  <span class="hidden-xs"><%=email%></span>
+                  <input type="hidden" value  = "<%=email%>" id= "input_email">
+                  <input type="hidden" id= "user_id">
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- User image -->
+                  <li class="user-header">
+                    <img src="/img/stories.jpg" class="img-circle" alt="User Image" />
+                    <p >
+                     
+                     
+                    </p>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="/img/stories.jpg" class="img-circle" alt="User Image" />
+            </div>
+            <div class="pull-left info">
+              <p id="user_name"></p>
+
+              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+          
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+            <li class="header">MAIN NAVIGATION</li>
+            <li class="active treeview">
+             
+              <ul class="treeview-menu">
+                <li class="active" ><a href="" data-toggle="modal" data-target="#myModal"><i class="fa fa-book"></i>Add Story</a></li>
+                <li class="active" ><a href="" onclick="generateGraph()" data-toggle="modal" data-target="#graphModal"><i class="fa fa-book"></i>View Graph</a></li>
+              </ul>
+            </li>
+            
+          </ul>
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Scrum
+            
+          </h1>
+          
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- Info boxes -->
+          <div class="row">
+            
+            <!-- fix for small devices only -->
+            <div class="clearfix visible-sm-block"></div>
+
+          </div><!-- /.row -->
+		  <div class="form-group">
+                      <label >Start Date: </label>
+                      <label id="display_start"></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <label >End Date: </label>
+                      <label id="display_end"></label>
+                    </div>
+		
+
+          <!-- Main row -->
+          <div class="row" id= "story_space">
+          
+            
+          </div><!-- /.row -->
+        
+
+          
+
+          <div class="row">
+              <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title" id="myModalLabel">Add Story</h4>
+                          </div>
+                          <div class="modal-body">
+                             
+                                  
+                                  <!-- form start -->
+                                  	 <div class="form-group">
+                                            
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="story_id" style="display:none;">
+                                                  </div>
+                                      <div class="box-body">
+                                          <div class="form-group">
+                                              <label>Story Name</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="story_name">
+                                           </div>
+                                       
+                                          <div class="form-group">
+                                              <label>Description</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="description">
+                                                  </div>
+                                           <div class="form-group">
+                                              <label>Resource Name</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="resource_name">
+                                          </div>  
+                                         <div class="form-group">
+                                              <label>Estimated Hrs</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="estimated_hours">
+                                          </div>   
+                                          <div class="form-group">
+                                              <label>Remaining Hrs</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="remaining_hours">
+                                          </div>  
+                                                                            
+                                      </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" onclick="createNewStory()" data-dismiss="modal">Submit</button>
+                          </div>
+                           
+                      </div>
+                  </div>
+                  </div>
+              </div>
+         </div><!-- /.row -->
+         
+         <div class="row">
+              <div class="modal fade" id="myModalUpdate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title" id="myModalLabel">Add Story</h4>
+                          </div>
+                          <div class="modal-body">
+                             
+                                  
+                                  <!-- form start -->
+                                  	 <div class="form-group">
+                                            
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="ed_story_id" style="display:none;">
+                                                  </div>
+                                      <div class="box-body">
+                                          <div class="form-group">
+                                              <label>Story Name</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="ed_story_name">
+                                           </div>
+                                       
+                                          <div class="form-group">
+                                              <label>Description</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="ed_description">
+                                                  </div>
+                                           <div class="form-group">
+                                              <label>Resource Name</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="ed_resource_name">
+                                          </div>  
+                                         <div class="form-group">
+                                              <label>Estimated Hrs</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="ed_estimated_hours">
+                                          </div>   
+                                          <div class="form-group">
+                                              <label>Remaining Hrs</label>
+                                              <input type="text" class="form-control" placeholder="" required = "true" id="ed_remaining_hours">
+                                          </div>  
+                                                                            
+                                      </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" onclick="updateStoryAjax()" data-dismiss="modal">Submit</button>
+                          </div>
+                           
+                      </div>
+                  </div>
+                  </div>
+              </div>
+         </div><!-- /.row -->
+         
+         
+         
+         <div class="row">
+              <div class="modal fade" id="ModalFirst" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title" id="myModalLabel">Add Story</h4>
+                          </div>
+                          <div class="modal-body">
+                             
+                                  
+                                  <!-- form start -->
+                                  		 <div class="form-group">
+                                              <label>Sprint Start Date</label>
+                                              <input type="date" class="form-control" placeholder="" required  id="first_sprint_start">
+                                          </div>  
+                                          <div class="form-group">
+                                              <label>Sprint End Date</label>
+                                              <input type="date" class="form-control" placeholder="" required  id="first_sprint_end">
+                                          </div>  
+                                          <div class="form-group">
+                                              <label>Story Name</label>
+                                              <input type="text" class="form-control" placeholder="" required id="first_story_name">
+                                           </div>
+                                       
+                                          <div class="form-group">
+                                              <label>Description</label>
+                                              <input type="text" class="form-control" placeholder="" required id="first_description">
+                                                  </div>
+                                           <div class="form-group">
+                                              <label>Resource Name</label>
+                                              <input type="text" class="form-control" placeholder="" required id="first_resource_name">
+                                          </div>  
+                                         <div class="form-group">
+                                              <label>Estimated Hrs</label>
+                                              <input type="text" class="form-control" placeholder="" required id="first_estimated_hours">
+                                          </div>   
+                                          <div class="form-group">
+                                              <label>Remaining Hrs</label>
+                                              <input type="text" class="form-control" placeholder="" required id="first_remaining_hours">
+                                          </div>  
+                                                                            
+                                      </div>
+                          <div class="modal-footer">
+                              
+                              <button type="submit" class="btn btn-primary" onclick="loadAllValues()" data-dismiss="modal">Submit</button>
+                          </div>
+                           
+                      </div>
+                  </div>
+                  </div>
+              </div>
+         </div><!-- /.row -->
+         
+         
+         
+         
+         
+       
+                 <div class="row">
+              <div class="modal fade" id="graphModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                              <h4 class="modal-title" id="myModalLabel">Graph</h4>
+                          </div>
+                          <div class="modal-body">
+                         <div class="box-body" id="graphcontainer">
+                                           
+                          </div>                                 
+                           </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                           
+                      </div>
+                  </div>
+                  </div>
+              </div>
+         </div><!-- /.row -->  
+         
+           
+  </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+
+      <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 2.0
+        </div>
+        <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.
+      </footer>
+
+    </div><!-- ./wrapper -->
+
+    <!-- jQuery 2.1.3 -->
+    <script src="/plugins/jQuery/jQuery-2.1.3.min.js"></script>
+    <!-- Bootstrap 3.3.2 JS -->
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- FastClick -->
+    <script src='/plugins/fastclick/fastclick.min.js'></script>
+    <!-- AdminLTE App -->
+    <script src="/js/app.min.js" type="text/javascript"></script>
+    <!-- Sparkline -->
+    <script src="/plugins/sparkline/jquery.sparkline.min.js" type="text/javascript"></script>
+    <!-- jvectormap -->
+    <script src="/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js" type="text/javascript"></script>
+    <script src="/plugins/jvectormap/jquery-jvectormap-world-mill-en.js" type="text/javascript"></script>
+    <!-- daterangepicker -->
+    <script src="/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
+    <!-- datepicker -->
+    <script src="/plugins/datepicker/bootstrap-datepicker.js" type="text/javascript"></script>
+    <!-- iCheck -->
+    <script src="/plugins/iCheck/icheck.min.js" type="text/javascript"></script>
+    <!-- SlimScroll 1.3.0 -->
+    <script src="/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <!-- ChartJS 1.0.1 -->
+    <script src="/plugins/chartjs/Chart.min.js" type="text/javascript"></script>
+    <script src="/plugins/chartjs/Chart.min.js" type="text/javascript"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="js/pages/dashboard2.js" type="text/javascript"></script>
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="js/demo.js" type="text/javascript"></script>
+    <script>
+    
+    	var currentlyupdating;
+    	
+    	
+    	window.onload = function() {
+    		
+    		var json = {email:document.getElementById("input_email").value};
+    		$.ajax({
+                url: "./scrum/dates?email="+document.getElementById("input_email").value,
+                contentType: "application/json",
+                data: JSON.stringify(json),
+                type: "GET",
+                
+                success: function(userdata) {
+                	
+                	if(userdata.msg!=null)
+                		firstTimeUser();
+                	else
+                	{
+                		$("#user_id").val(userdata._id);
+                		$("#user_name").val(userdata.name);
+                		$("#display_start").text(userdata.scrum.sprints.start_date);
+                		$("#display_end").text(userdata.scrum.sprints.end_date);
+                    	var stories = userdata.scrum.sprints.stories;
+                    	for (var idx in stories) {
+                    		displayStory(stories[idx].story_id,stories[idx].story_name,stories[idx].description,
+                					stories[idx].resource_name,
+                					stories[idx].estimated_hours,stories[idx].remaining_hours);
+                		
+                		}
+                	}
+          
+                },
+                error: function(errorThrown) {
+                	
+                	
+                 }
+
+            });
+    		
+        }
+    	
+    	
+    	function generateGraph()
+        {
+        	$.ajax({
+                url: "./scrum/getStatus?id="+document.getElementById("user_id").value,
+                contentType: "application/json",
+                
+                type: "GET",
+                dataType: "json",
+                success: function(status) {
+                	
+                	var noOfHrs = status.totalHours;
+                	var hrsRemaining = status.remaining_hrs;
+                	var expected = []; 
+                	var expectedDay = []; 
+                	var actual = [];
+                	var noOfDays =  Math.floor(( Date.parse(status.end_date) - Date.parse(status.start_date) ) / 86400000);
+                	//var noOfDays = 5;
+                	var noOfDaysRemaining =  Math.floor(( Date.parse(status.end_date) - Date.parse(status.cur_date) ) / 86400000);
+           			//var noOfDaysRemaining = 2;
+                	var hrsPerDayIdeal = noOfHrs/noOfDays;
+                	var hrsPerDayActual = (noOfHrs-hrsRemaining)/(noOfDays-noOfDaysRemaining);
+                	expected[0] = noOfHrs - hrsPerDayIdeal;
+                	actual[0] = noOfHrs - hrsPerDayActual;
+                	expectedDay.push("Day " + 0);
+                	
+                	for(i=1;i<noOfDays;i++)
+                		{
+                			expected.push(expected[i-1] - hrsPerDayIdeal)
+                			actual.push(actual[i-1] - hrsPerDayActual)	
+                			expectedDay.push("Day " + i);
+                		}
+                	
+                	drawGraph(expected,actual,expectedDay);
+          
+                },
+                error: function(errorThrown) {
+                	
+                	
+                	//displaycard("201",document.getElementById("firstname").value,document.getElementById("lastname").value,document.getElementById("cardname").value);
+                	
+                 }
+
+            });
+        	
+
+        }
+        
+        function drawGraph(expected,actual,expectedDay)
+        {
+        	
+        	$('#graphModal').modal('show'); 
+        	$('#graphcontainer').highcharts({
+        	        title: {
+        	            text: 'Burndown Chart',
+        	            x: -20 //center
+        	        },
+        	        subtitle: {
+        	            text: 'Burndown Chart',
+        	            x: -20
+        	        },
+        	        xAxis: {
+        	            categories: expectedDay
+        	        },
+        	        yAxis: {
+        	            title: {
+        	                text: 'No Of Hours'
+        	            },
+        	            plotLines: [{
+        	                value: 0,
+        	                width: 1,
+        	                color: '#808080'
+        	            }]
+        	        },
+        	        tooltip: {
+        	            valueSuffix: 'Hrs'
+        	        },
+        	        legend: {
+        	            layout: 'vertical',
+        	            align: 'right',
+        	            verticalAlign: 'middle',
+        	            borderWidth: 0
+        	        },
+        	        series: [{
+        	            name: 'Expected',
+        	            data: expected
+        	        }, {
+        	            name: 'Actual',
+        	            data: actual
+        	        }]
+        	    });
+        	
+        	
+        }
+        
+    	
+    	
+    	
+    	
+    	
+    	
+    	function firstTimeUser()
+    	{
+    		$('#ModalFirst').modal('show'); 
+    		
+    	}
+    	
+    	function loadAllValues()
+    	{
+    		
+    		var json = {storyName : document.getElementById("first_story_name").value , description:document.getElementById("first_description").value , resourceName: document.getElementById("first_resource_name").value, estimatedHrs:document.getElementById("first_estimated_hours").value,remainingHrs:document.getElementById("first_remaining_hours").value,email:document.getElementById("input_email").value,startDate:document.getElementById("first_sprint_start").value,endDate:document.getElementById("first_sprint_end").value };
+            
+    		$.ajax({
+                url: "./scrum/addsprint",
+                contentType: "application/json",
+                data: JSON.stringify(json),
+                type: "POST",
+                
+                success: function(userdata) {
+                	$("#user_id").val(userdata._id);
+                	$("#user_name").val(userdata.name);
+                	$("#display_start").text(userdata.scrum.sprints.start_date);
+            		$("#display_end").text(userdata.scrum.sprints.end_date);
+                	var stories = userdata.scrum.sprints.stories;
+                	for (var idx in stories) {
+                		displayStory(stories[idx].story_id,stories[idx].story_name,stories[idx].description,
+            					stories[idx].resource_name,
+            					stories[idx].estimated_hours,stories[idx].remaining_hours);
+                    }
+                	//alert(userdata);
+          
+                },
+                error: function(errorThrown) {
+                	
+                	
+                 }
+
+            });
+    		
+    		
+    	}
+        function createNewStory()
+        {
+        	var json = {storyName : document.getElementById("story_name").value , description:document.getElementById("description").value , resourceName: document.getElementById("resource_name").value, estimatedHrs:document.getElementById("estimated_hours").value,remainingHrs:document.getElementById("remaining_hours").value, id : $("#user_id").val() };
+            $.ajax({
+                url: "./scrum/story",
+                contentType: "application/json",
+                data: JSON.stringify(json),
+                type: "POST",
+                dataType: "json",
+                success: function(story) {
+                	
+                	displayStory(story.story_id,story.story_name,story.description,
+        					story.resource_name,
+        					story.estimated_hours,story.remaining_hours);
+          
+                },
+                error: function(errorThrown) {
+                	
+                	//displaycard("201",document.getElementById("firstname").value,document.getElementById("lastname").value,document.getElementById("cardname").value);
+                	
+                 }
+
+            });
+           
+        	
+        	
+        	
+        	// displayStory(document.getElementById("story_name").value,document.getElementById("story_id").value,document.getElementById("start_date").value,document.getElementById("description").value,document.getElementById("estimated_hours").value,document.getElementById("resource_name").value);
+        }
+        
+        function displayStory(storyId,storyName,storyDescription,resourceName,estimatedHrs,remainingHrs)
+        {
+        	
+        	$("#story_space").append('<div class="col-md-3"><div class="box box-warning box-solid"><div class="box-header with-border"><h3 class="box-title">'+storyName+'</h3><div class="box-tools pull-right"><button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button></div><!-- /.box-tools --></div><!-- /.box-header --><div class="box-body" style="display: block;"><label style="display:none;">'+ storyId +'</label><br><label>' +  storyName + '</label><br><label> ' +  storyDescription + '</label><br><label> ' +  resourceName + ' </label><br><label> ' +  estimatedHrs + ' </label><br><a class="btn  pull-right" onclick = "updateStory(this)"><i class="fa fa-edit"></i> Edit</a><label> ' +  remainingHrs + ' </label><br></div><!-- /.box-body --></div><!-- /.box --></div>');
+        	//$("#story_space").append('<div class="col-md-3"><div class="box box-warning box-solid"><div class="box-header with-border"><h3 class="box-title">Story</h3><div class="box-tools pull-right"><button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button></div><!-- /.box-tools --></div><!-- /.box-header --><div class="box-body" style="display: block;"><label>' + story_name + '</label><br><label>' + story_id + '</label><br><label>' + start_date +'</label><br><label>'+ description +'</label><br><label>'+ estimated_hours +'</label><br><label>'+ resource_name +'</label><br><a class="btn  pull-right" onclick = "updateStory(this)"><i class="fa fa-edit"></i> Edit</a><label>Queue</label><br></div><!-- /.box-body --></div><!-- /.box --></div>');
+        	//$("#story_space").append('<div class = "box box-primary"><div class="box-tools pull-right"><button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button></div><!-- /.box-tools --></div><!-- /.box-header --><div class="box-body" style="display: block;"><label style="display:none;">'+ storyId +'</label>&nbsp;<label>' +  storyName + '</label>&nbsp;<label> ' +  storyDescription + '</label>&nbsp;<label> ' +  resourceName + ' </label>&nbsp;<label> ' +  estimatedHrs + ' </label><a class="btn  pull-right" onclick = "updateStory(this)"><i class="fa fa-edit"></i> Edit</a><label> ' +  remainingHrs + ' </label></div><!-- /.box-body --></div>');
+        }
+        
+        function updateStory(param)
+        {
+        	currentlyupdating = param;
+        	$('#myModalUpdate').modal('show'); 
+        	
+        	 $('#ed_story_id').val(param.parentNode.childNodes[0].innerText);
+        	 $('#ed_story_name').val(param.parentNode.childNodes[2].innerText);
+        	 $('#ed_description').val(param.parentNode.childNodes[4].innerText);
+        	 $('#ed_resource_name').val(param.parentNode.childNodes[6].innerText);
+        	 $('#ed_estimated_hours').val(param.parentNode.childNodes[8].innerText);
+        	 $('#ed_remaining_hours').val(param.parentNode.childNodes[11].innerText);
+        }
+        function updateStoryAjax()
+        {
+        	//Make Ajax call to update card
+        	var json = {storyName : document.getElementById("ed_story_name").value , description:document.getElementById("ed_description").value , resourceName: document.getElementById("ed_resource_name").value, estimatedHrs:document.getElementById("ed_estimated_hours").value,remainingHrs:document.getElementById("ed_remaining_hours").value, id : $("#user_id").val() , id_story:document.getElementById("ed_story_id").value};
+
+        	$.ajax({
+                url: "./scrum/updateStory",
+                contentType: "application/json",
+                data: JSON.stringify(json),
+                type: "PUT",
+                dataType: "json",
+                success: function(story) {
+                	
+                	
+                	$(currentlyupdating.parentNode.childNodes[2]).text($('#ed_story_name').val());
+                	$(currentlyupdating.parentNode.childNodes[4]).text($('#ed_description').val());
+                	$(currentlyupdating.parentNode.childNodes[6]).text($('#ed_resource_name').val());
+                	$(currentlyupdating.parentNode.childNodes[8]).text($('#ed_estimated_hours').val());
+                	$(currentlyupdating.parentNode.childNodes[11]).text($('#ed_remaining_hours').val());
+          
+                },
+                error: function(errorThrown) {
+                	
+                	
+                 }
+
+            });
+        	
+        	
+        	
+        }
+        
+    </script>
+  </body>
+</html>

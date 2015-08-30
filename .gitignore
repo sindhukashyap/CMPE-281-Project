@@ -1,7 +1,7 @@
 lib-cov
 .settings/*
 .jshintrc
-.project/*
+.project
 
 npm-debug.log
 node_modules

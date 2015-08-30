@@ -1,7 +1,9 @@
 
 
 # Basic
-This is prototype Multitenant SaaS Web Application that can be used by project management groups to manage and track their projects. The features of this application are described below:
+This application was built as part of the term project by a group of 5 for the course - CMPE 281 Cloud Technologies at San Jose State Univerity.
+
+This is a prototype Multitenant SaaS Web Application that can be used by project management groups to manage and track their projects. The features of this application are described below:
 
 ## Usage
 1. Sign up for the application by selecting one of the three methodlogies - Scrum, Kanban or Watrefall. Projects can be managed using  one of these three methodologies.

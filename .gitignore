@@ -1,14 +1,7 @@
 lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-.settings/
+.settings/*
 .jshintrc
-.project
+.project/*
 
 npm-debug.log
 node_modules
